@@ -39,19 +39,22 @@ def test_min_mag(test_df, test_colname, expected):
     from lcanalyzer.models import min_mag
     assert min_mag(test_df, test_colname) == expected
 
-def test_mean_mag_integers():
+
+# Parameterisation for mean_mag function testing
+@pytest.mark.parametrize(
+    "test_df, test_colname, expected",
+    [
+        (pd.DataFrame(data=[[1, 5, 3], [7, 8, 9], [3, 4, 1]], columns=list("abc")), "a", pytest.approx(3.66,0.01)),
+        (pd.DataFrame(data=[[0, 0, 0], [0, 0, 0], [0, 0, 0]], columns=list("abc")), "b", 0),
+        (pd.DataFrame(data=[[1, 5, None], [7, 8, 9], [3, 4, 1]], columns=list("abc")), "c", 5),
+    ])
+def test_mean_mag(test_df, test_colname, expected):
     # Test that min_mag function works for integers
     from lcanalyzer.models import mean_mag
+    assert mean_mag(test_df, test_colname) == expected
 
-    test_input_df = pd.DataFrame(data=[[9, 8, 8], 
-                                       [7, 1, 3], 
-                                       [5, 4, 1]], columns=list("abc"))
-    test_input_colname = "a"
-    test_output = 7
 
-    assert mean_mag(test_input_df, test_input_colname) == test_output
-
-def test_calc_stat_integers():
+def test_calc_stat():
     # Test that calc_stat function works for integers
     from lcanalyzer.models import calc_stat 
 
