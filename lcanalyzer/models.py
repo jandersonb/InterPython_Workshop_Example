@@ -47,3 +47,21 @@ def min_mag(data,mag_col):
     :returns: the min value of the column.
     """
     return data[mag_col].min()
+
+
+def calc_stat(lc, bands, mag_col):
+    """Calculate maximum value for all bands.
+
+    :param lc: dict of pd.DataFrames with observed magnitudes for a single source.
+    :param bands: string containing the names for all bands.
+    :param mag_col: string with the name of the column for calculating the max value.
+    :returns: dict containing the max value for each band.
+    """
+    # Define an empty dictionary where we will store the results
+    stat = {}
+    # For each band get the maximum value and store it in the dictionary
+    for b in bands:
+        stat[b + "_max"] = max_mag(lc[b], mag_col)
+    return stat
+
+
