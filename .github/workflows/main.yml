@@ -10,6 +10,7 @@ jobs:
 
     # Define matrices of OSs and Python versions
     strategy:
+      fail-fast: false
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
         python-version: ["3.10", "3.11"]
