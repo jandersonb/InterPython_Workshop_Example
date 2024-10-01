@@ -49,19 +49,35 @@ def min_mag(data,mag_col):
     return data[mag_col].min()
 
 
-def calc_stat(lc, bands, mag_col):
-    """Calculate maximum value for all bands.
+def calc_stats(lc, bands, mag_col):
+    """Calculate max, mean, min values for all bands.
 
     :param lc: dict of pd.DataFrames with observed magnitudes for a single source.
     :param bands: string containing the names for all bands.
     :param mag_col: string with the name of the column for calculating the max value.
-    :returns: dict containing the max value for each band.
+    :returns: pd.DataFrame with max, mean, min for each band.
     """
     # Define an empty dictionary where we will store the results
-    stat = {}
-    # For each band get the maximum value and store it in the dictionary
+    stats = {}
+    # For each band get the stats and store it in the dictionary
     for b in bands:
-        stat[b + "_max"] = max_mag(lc[b], mag_col)
-    return stat
+        stat = {}
+        stat["max"] = max_mag(lc[b], mag_col)
+        stat["mean"] = mean_mag(lc[b], mag_col)
+        stat["min"] = min_mag(lc[b], mag_col)
+        stats[b] = stat
+    return pd.DataFrame.from_records(stats)
+
+
+def normalize_lc(df,mag_col):
+    # Normalize a single light curve
+    if any(df[mag_col].abs() > 90):
+        raise ValueError(mag_col+' contains values with abs() larger than 90!')
+        
+    min = min_mag(df,mag_col)
+    max = max_mag((df-min),mag_col)
+    lc = (df[mag_col]-min)/max
+    lc = lc.fillna(0)
+    return lc
 
 
